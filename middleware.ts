@@ -22,30 +22,36 @@ export async function middleware(request: NextRequest) {
   )
 
   const { data: { user } } = await supabase.auth.getUser()
+
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/dashboard')) {
     if (!user) return NextResponse.redirect(new URL('/login', request.url))
-    const { data: profile } = await supabase
-      .from('profiles').select('membership_status, role').eq('user_id', user.id).single()
-    if (!profile || profile.membership_status === 'pending')
-      return NextResponse.redirect(new URL('/register', request.url))
+    const { data: profile } = await supabase.from('profiles').select('membership_status, role').eq('user_id', user.id).single()
+    if (!profile || profile.membership_status === 'pending') return NextResponse.redirect(new URL('/register', request.url))
   }
 
   if (pathname.startsWith('/admin')) {
     if (!user) return NextResponse.redirect(new URL('/login', request.url))
-    const { data: profile } = await supabase
-      .from('profiles').select('role').eq('user_id', user.id).single()
-    if (!profile || !['admin', 'super_admin', 'staff', 'membership_manager', 'locker_manager', 'event_manager', 'content_manager'].includes(profile.role))
+    const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single()
+    if (!profile || !['admin', 'super_admin', 'staff', 'membership_manager', 'locker_manager', 'event_manager', 'content_manager'].includes(profile.role)) {
       return NextResponse.redirect(new URL('/', request.url))
+    }
   }
 
-  if (pathname === '/login' && user)
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  if (pathname.startsWith('/staff')) {
+    if (!user) return NextResponse.redirect(new URL('/login', request.url))
+    const { data: profile } = await supabase.from('profiles').select('role').eq('user_id', user.id).single()
+    if (!profile || !['staff', 'admin', 'super_admin'].includes(profile.role)) {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
+
+  if (pathname === '/login' && user) return NextResponse.redirect(new URL('/dashboard', request.url))
 
   return supabaseResponse
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/admin/:path*', '/login', '/register'],
+  matcher: ['/dashboard/:path*', '/admin/:path*', '/staff/:path*', '/login', '/register'],
 }
