@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-charcoal-950 text-gray-200;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 { font-family: Georgia, Cambria, 'Times New Roman', serif; }
+}
+
+@layer components {
+  .btn-gold {
+    @apply bg-gold-500 hover:bg-gold-600 text-black font-bold py-4 px-8 rounded text-lg transition-all duration-200 inline-block cursor-pointer min-w-[160px] text-center;
+  }
+  .btn-outline-gold {
+    @apply border-2 border-gold-500 hover:bg-gold-500 text-gold-500 hover:text-black font-bold py-4 px-8 rounded text-lg transition-all duration-200 inline-block cursor-pointer min-w-[160px] text-center;
+  }
+  .btn-dark {
+    @apply bg-charcoal-800 hover:bg-charcoal-700 text-white font-bold py-4 px-8 rounded text-lg transition-all duration-200 inline-block cursor-pointer;
+  }
+  .card-luxury {
+    @apply bg-charcoal-900 border border-charcoal-800 rounded-lg p-6;
+  }
+  .input-luxury {
+    @apply w-full bg-charcoal-900 border border-charcoal-700 text-white placeholder-charcoal-400 rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-gold-500 transition-colors;
+  }
+  .section-title { @apply text-3xl md:text-4xl font-serif text-gold-500 mb-4; }
+  .section-subtitle { @apply text-gray-400 text-lg mb-8; }
+  .gold-divider { @apply w-24 h-1 bg-gold-500 mx-auto my-6; }
+}
